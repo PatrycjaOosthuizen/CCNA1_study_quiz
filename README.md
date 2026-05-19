@@ -1,16 +1,6 @@
-# CCNA 1 v7.0 Final Exam — PoCodes Study Tool
+# CCNA 1 v7.0 Final Exam — POCodes Study Tool
 
-> A fully offline, self-contained HTML quiz app covering all 163 questions from the CCNA 1 Introduction to Networks v7.0 final exam. Built for serious study — every answer option is explained, images are embedded, and scoring mirrors the real Cisco exam.
-
----
-
-## Quick Start
-
-1. Download `ccna1_v6.html`
-2. Open it in **Chrome** or **Firefox**
-3. Choose a mode and click **▶ Start Quiz**
-
-No internet connection required. No installation. No login. Everything is baked into the single HTML file.
+> Quiz app covering all 163 questions from the CCNA 1 Introduction to Networks v7.0 final exam. Built for serious study — every answer option is explained, images are embedded, and scoring mirrors the real Cisco exam.
 
 ---
 
@@ -96,20 +86,6 @@ After completing a quiz you see:
 
 ---
 
-## File Details
-
-| Property | Value |
-|---|---|
-| File | `ccna1_v6.html` |
-| Size | ~5.7 MB |
-| Dependencies | None — fully self-contained |
-| Browser support | Chrome, Firefox, Safari, Edge |
-| Internet required | No |
-
-All question data, images, explanations, and logic are embedded inline. The file can be saved locally, shared via USB, or hosted on any static web server.
-
----
-
 ## Content Coverage
 
 Topics drawn from the CCNA 1 Introduction to Networks (ITN) v7.0 curriculum:
@@ -130,11 +106,9 @@ Topics drawn from the CCNA 1 Introduction to Networks (ITN) v7.0 curriculum:
 
 ## Credits
 
-Built by **[PoCodes](https://youtube.com/@PoCodes)** as part of the CCNA 1 study journey.
+Built by **[POCodes] as part of the CCNA 1 study journey.
 
 Questions sourced from the CCNA 1 v7.0 Final Exam document.  
 Explanations written to support active recall and knowledge retention.
 
 ---
-
-*Footer year updates automatically. No server, no tracking, no ads.*
