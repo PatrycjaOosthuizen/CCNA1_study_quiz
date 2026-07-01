@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CCNA 1 — Question Review Tool</title>
+  <script src="ccna1_data.js"></script>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --card: #21253a;
+      --border: #2e3350;
+      --accent: #00d4aa;
+      --accent2: #4f8ef7;
+      --correct: #22c55e;
+      --wrong: #ef4444;
+      --text: #e8ecf4;
+      --muted: #7a82a0;
+      --tag: #2e3350;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      background: var(--accent);
+      color: #000;
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 2px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .title {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    input[type="number"], input[type="text"] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      width: 90px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus, input[type="text"]:focus {
+      border-color: var(--accent);
+    }
+
+    input[type="text"] { width: 160px; }
+
+    button {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      text-transform: uppercase;
+    }
+
+    button:hover { opacity: 0.85; }
+
+    button.secondary {
+      background: var(--card);
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    .stats {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    .q-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .q-card:hover {
+      border-color: var(--accent2);
+    }
+
+    .q-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .q-num {
+      background: var(--accent2);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .q-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .options {
+      padding: 14px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+      border: 1px solid transparent;
+    }
+
+    .option.correct {
+      background: rgba(34, 197, 94, 0.08);
+      border-color: rgba(34, 197, 94, 0.3);
+      color: #86efac;
+    }
+
+    .option.wrong {
+      background: rgba(239, 68, 68, 0.06);
+      border-color: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+    }
+
+    .opt-letter {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+      margin-top: 1px;
+    }
+
+    .correct .opt-letter {
+      background: rgba(34, 197, 94, 0.2);
+      color: var(--correct);
+    }
+
+    .wrong .opt-letter {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--wrong);
+    }
+
+    .opt-explanation {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    .summary-block {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .summary-text {
+      font-size: 13px;
+      line-height: 1.75;
+      color: #c8cfe0;
+      white-space: pre-wrap;
+    }
+
+    .q-footer {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+    }
+
+    .tag {
+      font-size: 10px;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: var(--tag);
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .tag.multi { color: var(--accent); border: 1px solid rgba(0,212,170,0.2); }
+
+    .q-image {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .q-image img {
+      max-width: 100%;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+
+    .empty h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    #scrollTop {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s;
+      padding: 0;
+    }
+
+    #scrollTop.visible { opacity: 1; }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .sep {
+      color: var(--muted);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">POCODES</div>
+  <div class="title">CCNA 1 — Review Tool</div>
+  <div class="controls">
+    <div class="filter-row">
+      <input type="number" id="jumpNum" placeholder="Q#" min="1" max="163" title="Jump to question number"/>
+      <button onclick="jumpToQuestion()">GO</button>
+      <div class="sep">|</div>
+      <input type="number" id="rangeFrom" placeholder="From" min="1" max="163"/>
+      <div class="sep">→</div>
+      <input type="number" id="rangeTo" placeholder="To" min="1" max="163"/>
+      <button onclick="filterRange()">RANGE</button>
+      <button class="secondary" onclick="showAll()">ALL</button>
+    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="empty">
+    <h2>CCNA 1 Question Review</h2>
+    <p>Loading questions from ccna1_data.js…</p>
+  </div>
+</main>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  window.addEventListener('load', () => {
+    let found = null;
+
+    try { if (typeof QS !== 'undefined' && Array.isArray(QS) && QS.length > 0) { found = QS; } } catch(e) {}
+    if (!found) { try { if (typeof questions !== 'undefined' && Array.isArray(questions) && questions.length > 0) { found = questions; } } catch(e) {} }
+    if (!found) { try { if (typeof quizData !== 'undefined' && Array.isArray(quizData) && quizData.length > 0) { found = quizData; } } catch(e) {} }
+    if (!found) { try { if (typeof data !== 'undefined' && Array.isArray(data) && data.length > 0) { found = data; } } catch(e) {} }
+
+    if (!found) {
+      const candidates = Object.keys(window).filter(k => {
+        try { return Array.isArray(window[k]) && window[k].length > 10 && window[k][0]?.question; }
+        catch(e) { return false; }
+      });
+      if (candidates.length > 0) {
+        found = window[candidates[0]];
+      }
+    }
+
+    if (!found) {
+      document.getElementById('main').innerHTML = `
+        <div class="empty">
+          <h2>⚠️ Quiz data not found</h2>
+          <p>Make sure ccna1_review.html is in the same folder as ccna1_data.js and open via Live Server.</p>
+        </div>`;
+      return;
+    }
+
+    window._quizData = found;
+    renderQuestions(found);
+    updateStats(found.length, found.length);
+  });
+
+  function renderQuestions(list) {
+    const main = document.getElementById('main');
+    if (!list || list.length === 0) {
+      main.innerHTML = `<div class="empty"><h2>No questions found</h2><p>Adjust your filter and try again.</p></div>`;
+      return;
+    }
+    main.innerHTML = list.map(q => buildCard(q)).join('');
+  }
+
+  function buildCard(q) {
+    const isMulti = q.correct && q.correct.length > 1;
+    const correctSet = new Set(q.correct || []);
+
+    const optionsHTML = (q.options || []).map((opt, i) => {
+      const isCorrect = correctSet.has(i);
+      const cls = isCorrect ? 'correct' : 'wrong';
+      const label = isCorrect ? '✓' : '✗';
+      const expl = q.opt_explanations && q.opt_explanations[i]
+        ? `<div class="opt-explanation">${escHtml(q.opt_explanations[i])}</div>` : '';
+      return `
+        <div class="option ${cls}">
+          <span class="opt-letter">${label}</span>
+          <div>
+            <div>${escHtml(opt)}</div>
+            ${expl}
+          </div>
+        </div>`;
+    }).join('');
+
+    const imgHTML = q.img_srcs && q.img_srcs.length > 0
+      ? `<div class="q-image">${q.img_srcs.map(src => `<img src="${src}" alt="exhibit"/>`).join('')}</div>` : '';
+
+    const summaryHTML = q.summary
+      ? `<div class="summary-block">
+           <div class="section-label">📘 Summary</div>
+           <div class="summary-text">${escHtml(q.summary)}</div>
+         </div>` : '';
+
+    return `
+      <div class="q-card" id="q${q.num}">
+        <div class="q-header">
+          <span class="q-num">Q${q.num}</span>
+          <div class="q-text">${escHtml(q.question)}</div>
+        </div>
+        ${imgHTML}
+        <div class="options">${optionsHTML}</div>
+        ${summaryHTML}
+        <div class="q-footer">
+          ${isMulti ? '<span class="tag multi">CHOOSE TWO+</span>' : '<span class="tag">SINGLE</span>'}
+          <span class="tag">${(q.options||[]).length} options</span>
+        </div>
+      </div>`;
+  }
+
+  function escHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  function jumpToQuestion() {
+    const num = parseInt(document.getElementById('jumpNum').value);
+    if (!num) return;
+    const el = document.getElementById('q' + num);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.style.borderColor = 'var(--accent)';
+      setTimeout(() => el.style.borderColor = '', 2000);
+    } else {
+      const q = (window._quizData || []).find(q => q.num === num);
+      if (q) {
+        renderQuestions([q]);
+        updateStats(1, window._quizData.length);
+      } else {
+        alert(`Question ${num} not found.`);
+      }
+    }
+  }
+
+  function filterRange() {
+    const from = parseInt(document.getElementById('rangeFrom').value);
+    const to = parseInt(document.getElementById('rangeTo').value);
+    if (!from || !to) return;
+    const filtered = (window._quizData || []).filter(q => q.num >= from && q.num <= to);
+    renderQuestions(filtered);
+    updateStats(filtered.length, window._quizData.length);
+  }
+
+  function showAll() {
+    renderQuestions(window._quizData || []);
+    updateStats((window._quizData||[]).length, (window._quizData||[]).length);
+    document.getElementById('rangeFrom').value = '';
+    document.getElementById('rangeTo').value = '';
+    document.getElementById('jumpNum').value = '';
+  }
+
+  function updateStats(shown, total) {
+    document.getElementById('stats').textContent = `Showing ${shown} of ${total} questions`;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const focused = document.activeElement;
+      if (focused.id === 'jumpNum') jumpToQuestion();
+      if (focused.id === 'rangeFrom' || focused.id === 'rangeTo') filterRange();
+    }
+  });
+
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('scrollTop');
+    btn.classList.toggle('visible', window.scrollY > 400);
+  });
+</script>
+</body>
+</html>

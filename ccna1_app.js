@@ -174,7 +174,7 @@
           document.getElementById("rbanner").textContent =
             "📌 Memorise — not counted in score";
           if (q.summary) {
-            document.getElementById("sum-tx").textContent = q.summary;
+            document.getElementById("sum-tx").innerHTML = q.summary.replace(/\n/g, "<br>").replace(/`([^`]+)`/g, "<strong>$1</strong>");
             document.getElementById("summary").className = "summary show";
           }
           answered = true;
@@ -256,7 +256,7 @@
             "✗ Wrong — correct: " + corr.map((i) => L[i]).join(", ");
         }
         if (q.summary) {
-          document.getElementById("sum-tx").textContent = q.summary;
+          document.getElementById("sum-tx").innerHTML = q.summary.replace(/\n/g, "<br>").replace(/`([^`]+)`/g, "<strong>$1</strong>");
           document.getElementById("summary").className = "summary show";
         }
         document.getElementById("btncheck").style.display = "none";
@@ -294,7 +294,7 @@
             ? q.correct.map((i) => L[i]).join(", ")
             : "see exhibit");
         if (q.summary) {
-          document.getElementById("sum-tx").textContent = q.summary;
+          document.getElementById("sum-tx").innerHTML = q.summary.replace(/\n/g, "<br>").replace(/`([^`]+)`/g, "<strong>$1</strong>");
           document.getElementById("summary").className = "summary show";
         }
         results.push({ q: q, correct: false, skipped: true, memo: false });
